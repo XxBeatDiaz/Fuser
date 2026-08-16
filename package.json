@@ -1,0 +1,12 @@
+{
+  "scripts": {
+    "dev:mqtt": "npx aedes-cli -p 1883 --host 0.0.0.0",
+    "dev:z2m": "node -e \"setTimeout(() => {}, 3000)\" && cd zigbee2mqtt && npm start",
+    "dev:backend": "cd server && npm start",
+    "dev:frontend": "cd fuser-frontend && npm run dev -- --host 0.0.0.0",
+    "dev": "concurrently \"npm run dev:mqtt\" \"npm run dev:z2m\" \"npm run dev:backend\" \"npm run dev:frontend\""
+  },
+  "devDependencies": {
+    "concurrently": "^10.0.1"
+  }
+}
