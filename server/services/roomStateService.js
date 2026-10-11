@@ -8,7 +8,7 @@ export const roomState = {
 };
 
 export const drawerSensorCounter = { value: 0 };
-//export const bathroomDoorSensorCounter = { value: 0 };
+export const bathroomDoorSensorCounter = { value: 0 };
 export const skeletonSensors = { leftArm: false, rightArm: false, leftLeg: false, rightLeg: false };
 
 export const resetSkeletonSensors = () => {
