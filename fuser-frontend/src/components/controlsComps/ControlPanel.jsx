@@ -7,7 +7,10 @@ import {
   selectIsPaused,
 } from "../../store/slices/roomSlice";
 
-import { syncRoomStatus } from "../../store/slices/thunks/roomThunks"; // ייבוא ה-Thunk לסנכרון מול השרת
+import {
+  syncRoomStatus,
+  resetDevicesThunk,
+} from "../../store/slices/thunks/roomThunks"; // ייבוא ה-Thunk לסנכרון מול השרת
 
 import TimerView from "../timerComps/TimerView";
 import Controls from "./Controls";
@@ -49,6 +52,7 @@ export const ControlPanel = () => {
     ) {
       return;
     }
+    dispatch(resetDevicesThunk());
     dispatch(syncRoomStatus({ gameStatus: "IDLE", isPaused: false }));
   };
 

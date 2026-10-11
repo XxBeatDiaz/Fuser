@@ -3,6 +3,7 @@ import axios from 'axios';
 
 const serverIp = window.location.hostname;
 const API_URL = `http://${serverIp}:5000/api/room/status`;
+const DEVICES_API_URL = `http://${serverIp}:5000/api/devices`;
 
 /**
  * Thunk אסינכרוני למשיכת מצב החדר הנוכחי מהשרת (מעולה למכשיר חדש שמתחבר באמצע)
@@ -28,6 +29,18 @@ export const syncRoomStatus = createAsyncThunk(
     try {
       const response = await axios.post(API_URL, { gameStatus, isPaused });
       return response.data.state;
+    } catch (error) {
+      return rejectWithValue(error.message);
+    }
+  }
+);
+
+export const resetDevicesThunk = createAsyncThunk(
+  'devices/resetAll',
+  async (_, { rejectWithValue }) => {
+    try {
+      const response = await axios.post(`${DEVICES_API_URL}/reset`);
+      return response.data;
     } catch (error) {
       return rejectWithValue(error.message);
     }

@@ -61,7 +61,7 @@ export const AppNavbar = () => {
               fontSize: "20px",
             }}
           >
-            HOST: {serverIp}
+            HOST: http://{serverIp}:5173
           </Typography>
 
           <Divider sx={{ my: 1, borderColor: "#64636071" }} />
@@ -118,29 +118,25 @@ export const AppNavbar = () => {
         >
           <Tab
             icon={<DashboardIcon />}
-            iconPosition="start"
-            label="חידות"
+            iconPosition="top"
             component={Link}
             to="/"
           />
           <Tab
             icon={<SensorsIcon />}
-            iconPosition="start"
-            label="חיישנים"
+            iconPosition="top"
             component={Link}
             to="/sensors"
           />
           <Tab
             icon={<TouchAppIcon />}
-            iconPosition="start"
-            label="בקרה"
+            iconPosition="top"
             component={Link}
             to="/devices"
           />
           <Tab
             icon={<VideocamIcon />}
-            iconPosition="start"
-            label="מצלמות"
+            iconPosition="top"
             component={Link}
             to="/camera"
           />

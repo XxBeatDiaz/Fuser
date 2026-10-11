@@ -37,3 +37,16 @@ export const sendDeviceCommand = async (topic, state) => {
     publish(mqttTopic, { state }); 
     return { success: true };
 };
+
+export const resetAllDevices = async () => {
+    console.log('🔄 [DeviceService] מתחיל איפוס מכשירים למצב התחלתי...');
+
+    await Promise.all([
+        sendDeviceCommand('Blob ultraviolet right', 'OFF'),
+        sendDeviceCommand('Blob ultraviolet left', 'OFF'),
+        sendDeviceCommand('Blob showcase', 'OFF'),
+        sendDeviceCommand('Blob center room', 'ON')
+    ]);
+
+    return { success: true, message: 'All devices reset successfully' };
+};

@@ -5,7 +5,8 @@ import {
   syncRoomStatus,
   setCompleteRoomTimeThunk,       // 👈 נוסף כאן
   addCompleteRoomTimeThunk,
-  subtractCompleteRoomTimeThunk
+  subtractCompleteRoomTimeThunk,
+  resetDevicesThunk,
 } from './thunks/roomThunks.js';
 
 const initialState = {
@@ -97,7 +98,18 @@ const roomSlice = createSlice({
         state.gameStatus = action.payload.gameStatus;
         state.isPaused = action.payload.isPaused;
         state.completRoomTime = action.payload.completRoomTime;
-      });
+      })
+
+      .addCase(resetDevicesThunk.pending, (state) => {
+        state.loading = true;
+      })
+      .addCase(resetDevicesThunk.fulfilled, (state) => {
+        state.loading = false;
+      })
+      .addCase(resetDevicesThunk.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload;
+      })
   }
 });
 

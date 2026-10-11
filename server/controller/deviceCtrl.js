@@ -1,4 +1,4 @@
-import { sendDeviceCommand } from '../services/deviceService.js';
+import { resetAllDevices, sendDeviceCommand } from '../services/deviceService.js';
 
 // --- הקונטרולר המקורי שלך לשליטה (עבור ה-POST) ---
 export const deviceCtrl = async (req, res) => {
@@ -17,6 +17,19 @@ export const deviceCtrl = async (req, res) => {
         
     } catch (error) {
         console.error('❌ [Controller Error - Control]:', error);
+        return res.status(500).json({ 
+            success: false, 
+            error: 'Internal Server Error' 
+        });
+    }
+};
+
+export const resetDevicesCtrl = async (req, res) => {
+    try {
+        const result = await resetAllDevices();
+        return res.status(200).json(result);
+    } catch (error) {
+        console.error('❌ [Controller Error - Reset]:', error);
         return res.status(500).json({ 
             success: false, 
             error: 'Internal Server Error' 

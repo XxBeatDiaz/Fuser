@@ -1,9 +1,9 @@
-import { 
-  updateRoomStatus, 
-  getRoomStatus, 
-  setCompleteRoomTime,  // ⏱️ ייבוא הפונקציה להגדרת זמן גג
-  addCompleteRoomTime,       // ➕ ייבוא הפונקציה להוספת זמן
-  subtractCompleteRoomTime   // ➖ ייבוא הפונקציה להפחתת זמן
+import {
+    updateRoomStatus,
+    getRoomStatus,
+    setCompleteRoomTime,  // ⏱️ ייבוא הפונקציה להגדרת זמן גג
+    addCompleteRoomTime,       // ➕ ייבוא הפונקציה להוספת זמן
+    subtractCompleteRoomTime   // ➖ ייבוא הפונקציה להפחתת זמן
 } from '../services/roomStateService.js';
 
 export const changeRoomStatus = async (req, res) => {

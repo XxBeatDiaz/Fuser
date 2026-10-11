@@ -1,10 +1,14 @@
-// src/automation/devices/lightDevice.js
+// src/automation/devices/showcaseDevice.js
 import { sendDeviceCommand } from '../../services/deviceService.js';
 
-const DEVICE_NAME = 'Light';
+const DEVICE_NAME = 'Blob showcase';
 
-export const lightDevice = {
-    
+export const blobShowcase = {
+
+    // ==========================================
+    // 1. שליטה בבסיס המעגל (Relay Control)
+    // ==========================================
+
     turnOn: async () => {
         console.log(`💡 [Device: ${DEVICE_NAME}] הפעלת ממסר (ON)`);
         return await sendDeviceCommand(DEVICE_NAME, 'ON');
@@ -20,6 +24,9 @@ export const lightDevice = {
         return await sendDeviceCommand(DEVICE_NAME, 'TOGGLE');
     },
 
+    // ==========================================
+    // 2. הגדרות מתקדמות וחומרה (Tuya TS0001)
+    // ==========================================
 
     /**
      * חוסם או מאפשר את הלחיצה על הכפתור הפיזי (Child Lock)
@@ -33,18 +40,16 @@ export const lightDevice = {
 
     /**
      * קובע מה יקרה למכשיר אחרי הפסקת חשמל (Power outage memory)
-     * קריטי לאיפוס וסנכרון החדר בריסטארט!
-     * @param {'on' | 'off' | 'restore'} mode - ידלק, יישאר כבוי, או יחזור למצב האחרון לפני הניתוק
+     * @param {'ON' | 'OFF' | 'RESTORE'} mode - ידלק, יישאר כבוי, או יחזור למצב האחרון
      */
     setPowerOutageMemory: async (mode) => {
         console.log(`🔌 [Device: ${DEVICE_NAME}] הגדרת זיכרון הפסקת חשמל ל-${mode}`);
-        // בדגמים האלו השדה נקרא לרוב power_outage_memory ב-MQTT
         return await sendDeviceCommand(DEVICE_NAME, JSON.stringify({ power_outage_memory: mode }));
     },
 
     /**
-     * שליטה על נורית הלד הפיזית שעל התקע (Indicator mode)
-     * @param {'disabled' | 'lit_when_on' | 'lit_when_off'} mode 
+     * שליטה על נורית הלד הפיזית שעל המתג (Indicator mode)
+     * @param {'off' | 'none' | 'relay' | 'contract'} mode 
      */
     setIndicatorMode: async (mode) => {
         console.log(`🚨 [Device: ${DEVICE_NAME}] שינוי מצב נורית לד ל-${mode}`);
@@ -60,20 +65,12 @@ export const lightDevice = {
         return await sendDeviceCommand(DEVICE_NAME, JSON.stringify({ countdown: seconds }));
     },
 
-    /**
-     * גורם לנורית המכשיר להבהב פיזית כדי לזהות אותו בין המכשירים (Identify)
-     */
-    identify: async () => {
-        console.log(`🔍 [Device: ${DEVICE_NAME}] מפעיל זיהוי חומרה (Identify)`);
-        return await sendDeviceCommand(DEVICE_NAME, JSON.stringify({ identify: {} }));
-    },
-
     // ==========================================
     // 3. אפקטים מבוססי תוכנה (Software Effects)
     // ==========================================
 
     /**
-     * מהבהב את המנורה (שימושי לרמזים בחדר)
+     * מהבהב את התאורה (שימושי לרמזים/חיוויים בחדר)
      */
     flash: async (count = 3, intervalMs = 500) => {
         console.log(`⚡ [Device: ${DEVICE_NAME}] מתחיל אפקט הבהוב תוכנתי (${count} פעמים)`);
@@ -93,18 +90,15 @@ export const lightDevice = {
     // ==========================================
 
     /**
-     * מפענח את כל המידע המלא שהמכשיר מזרים לרשת
+     * מפענח את המידע שמוזרם מדגם ה-TS0001
      */
     parseTelemetry: (payload) => {
         return {
-            state: payload.state,                       // ON / OFF
-            countdown: payload.countdown || 0,          // שניות לסיום הטיימר
-            power: payload.power || 0,                  // צריכה אקטיבית (W)
-            current: payload.current || 0,              // זרם נוכחי (A)
-            voltage: payload.voltage || 0,              // מתח נוכחי (V)
-            energy: payload.energy || 0,                // סך הכל צריכה מצטברת (kWh)
-            childLock: payload.child_lock,              // LOCK / UNLOCK
-            linkQuality: payload.linkquality            // עוצמת קליטת קשר (LQI) - בתמונות שלך עומד על 135
+            state: payload.state,                      // ON / OFF
+            countdown: payload.countdown || 0,         // שניות לסיום הטיימר
+            childLock: payload.child_lock,             // LOCK / UNLOCK
+            indicatorMode: payload.indicator_mode,     // מצב נורית החיווי
+            linkQuality: payload.linkquality           // עוצמת קליטת קשר (LQI)
         };
     }
 };

@@ -1,31 +1,48 @@
-import { Grid } from "@mui/material";
+import { useState } from "react";
+import { Box } from "@mui/material";
 import SensorCard from "./SensorCard";
+import SensorInfoPopup from "./SensorInfoPopup";
 
 export default function SensorsGrid({ devices }) {
+  const [selectedSensor, setSelectedSensor] = useState(null);
   const currentDevices = Array.isArray(devices) ? devices : [];
 
+  const handleOpenPopup = (sensor) => {
+    setSelectedSensor(sensor);
+  };
+
+  const handleClosePopup = () => {
+    setSelectedSensor(null);
+  };
+
   return (
-    <Grid container spacing={4}>
-      {currentDevices.map((sensor) => (
-        <Grid 
-          key={sensor.id} 
-          xs={12} 
-          sm={6} 
-          md={4}
-          sx={{
-            display: 'flex', 
-            minHeight: { xs: '120px', sm: '140px', md: '150px' } 
-          }}
-        >
-          <SensorCard 
+    <>
+      <Box
+        sx={{
+          display: "grid",
+          gridTemplateColumns: "repeat(auto-fill, minmax(280px, 1fr))",
+          gap: 2.5,
+          width: "100%",
+        }}
+      >
+        {currentDevices.map((sensor) => (
+          <SensorCard
+            key={sensor.id || sensor.name}
             name={sensor.name}
             value={sensor.value}
             trueText={sensor.trueText}
             falseText={sensor.falseText}
             Icon={sensor.Icon}
+            onClick={() => handleOpenPopup(sensor)}
           />
-        </Grid>
-      ))}
-    </Grid>
+        ))}
+      </Box>
+
+      <SensorInfoPopup
+        open={Boolean(selectedSensor)}
+        onClose={handleClosePopup}
+        sensor={selectedSensor}
+      />
+    </>
   );
 }

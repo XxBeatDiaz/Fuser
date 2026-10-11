@@ -1,4 +1,4 @@
-export const frontDoorSensor = {
+export const bathroomDoorSensor = {
     parseState: (payload) => {
         return {
             isOpen: payload.contact === false,

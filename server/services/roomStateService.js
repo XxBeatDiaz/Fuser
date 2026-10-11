@@ -1,10 +1,21 @@
 import { emitRoomStateUpdate } from '../config/socket.js';
 
-const roomState = {
+export const roomState = {
     gameStatus: 'IDLE',      // 'IDLE' | 'RUNNING' | 'COMPLETED'
     isPaused: false,
     elapsedTime: 0,          // ⏱️ זמן שעבר בשניות
     completRoomTime: 60 * 60, // 🏁 זמן מקסימלי לחדר בשניות
+};
+
+export const drawerSensorCounter = { value: 0 };
+export const bathroomDoorSensorCounter = { value: 0 };
+export const skeletonSensors = { leftArm: false, rightArm: false, leftLeg: false, rightLeg: false };
+
+export const resetSkeletonSensors = () => {
+    skeletonSensors.leftArm = false;
+    skeletonSensors.rightArm = false;
+    skeletonSensors.leftLeg = false;
+    skeletonSensors.rightLeg = false;
 };
 
 let timerInterval = null;
@@ -49,6 +60,10 @@ export const updateRoomStatus = (gameStatus, isPaused) => {
         stopTimer();
         if (roomState.gameStatus === 'IDLE') {
             resetRoomTime();
+            resetSkeletonSensors();
+            
+            drawerSensorCounter.value = 0;
+            bathroomDoorSensorCounter.value = 0;
         }
     }
 
@@ -60,14 +75,14 @@ export const updateRoomStatus = (gameStatus, isPaused) => {
 export const setCompleteRoomTime = (minutes) => {
     if (typeof minutes === 'number' && minutes >= 0 && isRoomAutomationBlocked()) {
         roomState.completRoomTime = minutes * 60; // המרה לשניות
-        
+
         // מנגנון הגנה: אם הזמן החדש קטן ממה שכבר עבר, נחתוך ונסיים את המשחק
         if (roomState.elapsedTime >= roomState.completRoomTime) {
             roomState.elapsedTime = roomState.completRoomTime;
             roomState.gameStatus = 'COMPLETED';
             stopTimer();
         }
-        
+
         emitRoomStateUpdate({ ...roomState });
     }
     return { ...roomState };
